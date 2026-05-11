@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s # Высокая частота для отслеживания пиков потребления 1.4кВт
+
+scrape_configs:
+  - job_name: 'neural_tower_gpu'
+    static_configs:
+      - targets: ['dcgm-exporter:9400']

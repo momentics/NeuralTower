@@ -1,0 +1,86 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "title": "GPU Temperatures (Core & HBM2)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "DCGM_FI_DEV_GPU_TEMP", "legendFormat": "GPU {{gpu}} Core" },
+        { "expr": "DCGM_FI_DEV_MEM_COPY_UTIL", "legendFormat": "GPU {{gpu}} Memory" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 60 },
+              { "color": "red", "value": 75 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Power Usage per Mezzanine (Watts)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "DCGM_FI_DEV_POWER_USAGE", "legendFormat": "GPU {{gpu}} Power" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "watt",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 300 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Compute Load (Tensor Cores)",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "avg(DCGM_FI_DEV_GPU_UTIL) by (gpu)", "legendFormat": "GPU {{gpu}}" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    {
+      "title": "PCIe Throughput (vLLM SWAP Monitor)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        { "expr": "DCGM_FI_DEV_PCIE_TX_THROUGHPUT", "legendFormat": "TX GPU {{gpu}}" },
+        { "expr": "DCGM_FI_DEV_PCIE_RX_THROUGHPUT", "legendFormat": "RX GPU {{gpu}}" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bps" }
+      }
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["NeuralTower", "AI", "V100"],
+  "templating": { "list": [] },
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "NeuralTower Operational Dashboard",
+  "uid": "nt_metrics",
+  "version": 1
+}

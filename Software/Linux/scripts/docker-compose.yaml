@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: neural_tower_vllm
+    runtime: nvidia
+    # Блокировка памяти для предотвращения ухода в системный swap
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    # Привязка к физическим ядрам Xeon (исключая системные 0-1) для исключения переключений контекста
+    cpuset: "2-43" 
+    ipc: host
+    privileged: true # Необходимо для прямого доступа к NVMe swap-разделу
+    environment:
+      - CUDA_VISIBLE_DEVICES=0,1,2,3
+      - NCCL_P2P_DISABLE=0 # Активация P2P через NVLink/PLX
+      - NCCL_IB_DISABLE=1
+      - VLLM_LOGGING_LEVEL=INFO
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - /dev/nvme0n1:/dev/nvme0n1 # Прямой проброс блочного устройства для SWAP
+    ports:
+      - "8000:8000"
+    command: >
+      --model <path_to_model>
+      --tensor-parallel-size 4
+      --gpu-memory-utilization 0.92
+      --max-model-len 32768
+      --block-size 16
+      --swap-space 64
+      --disable-log-requests
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu, compute, utility]
+    restart: always
+
+  dcgm-exporter:
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:latest
+    container_name: neural_tower_metrics
+    runtime: nvidia
+    ports:
+      - "9400:9400"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: neural_tower_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: neural_tower_grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - ./grafana_provider.yml:/etc/grafana/provisioning/dashboards/provider.yml
+      - ./grafana_dashboard.json:/etc/grafana/provisioning/dashboards/neural_tower.json
+
+  nginx:
+    image: nginx:alpine
+    container_name: neural_tower_gateway
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - vllm
