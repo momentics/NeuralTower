@@ -8,7 +8,7 @@
 
 Основные параметры в `/etc/portage/make.conf`:
 *   `COMMON_FLAGS="-O3 -march=broadwell -pipe -flto=auto"` - использование агрессивной оптимизации и межмодульной оптимизации времени линковки (LTO) для всех системных компонентов.
-*   `USE="cuda nccl mpi tensorrt openmp opencl pcie-p2p -X -wayland -gui"` - активация поддержки CUDA 13.x и протоколов прямого обмена данными между GPU.
+*   `USE="cuda nccl cudnn mpi tensorrt openmp opencl pcie-p2p -X -wayland -gui -dist-kernel"` - активация поддержки CUDA 13.x и протоколов прямого обмена данными между GPU.
 *   `PYTHON_TARGETS="python3_13"` - использование актуальной версии Python 3.13 с поддержкой улучшенного управления памятью и многопоточностью.
 *   `VIDEO_CARDS="nvidia"` - сборка драйверов актуальной ветки 5xx.x или новее.
 

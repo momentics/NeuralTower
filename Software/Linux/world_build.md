@@ -28,7 +28,7 @@ eselect profile set default/linux/amd64/23.0/hardened
 Данная команда инициирует полную пересборку всех системных компонентов и библиотек (включая glibc, GCC и системные зависимости Python 3.13) с учетом флагов оптимизации под процессор и CUDA 13.x. Это гарантирует отсутствие в системе лишних бинарных модулей и максимальную производительность вычислительного стека.
 
 ```bash
-emerge --ask --verbose --update --deep --newuse --with-bdeps=y --backtrack=100 @world
+emerge --ask --verbose --update --deep --newuse @world
 ```
 
 ## 4. Сборка специфического стека NeuralTower
