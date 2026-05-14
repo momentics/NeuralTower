@@ -1,0 +1,49 @@
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
+
+# Настройка неинтерактивного режима установки
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Установка системных зависимостей для компиляции
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-dev \
+    git \
+    ccache \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Настройка переменных окружения для жесткой принудительной сборки под V100 (SM70)
+ENV TORCH_CUDA_ARCH_LIST="7.0"
+ENV VLLM_CONCURRENT_ARCHES="7.0"
+ENV PYTORCH_NVCC_FLAGS="-arch=sm_70"
+ENV MAX_JOBS=8
+
+# Отключение несовместимого с V100 модуля FlashAttention
+ENV VLLM_TARGET_DEVICE="cuda"
+ENV VLLM_USE_FLASH_ATTN=0
+ENV vllm_flash_attn=0
+
+# Обновление pip и установка базовых пакетов сборки
+RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel
+
+# Установка стабильного PyTorch, совместимого с CUDA 12.1/13.x на V100
+RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url pytorch.org
+
+# Клонирование и сборка vLLM из исходников (совместимая ветка 0.18.x)
+RUN git clone github.com /opt/vllm && \
+    cd /opt/vllm && \
+    git checkout v0.18.2 && \
+    pip3 install --no-cache-dir -r requirements-build.txt && \
+    TORCH_CUDA_ARCH_LIST="7.0" VLLM_USE_FLASH_ATTN=0 pip3 install --no-build-isolation -e .
+
+# Сборка xFormers из исходников под SM70 (замена FlashAttention)
+RUN TORCH_CUDA_ARCH_LIST="7.0" pip3 install --no-cache-dir xformers --no-deps
+
+# Открытие порта для OpenAI-совместимого API
+EXPOSE 8000
+
+# Рабочая директория
+WORKDIR /app
+
+# По умолчанию запускаем сервер (параметры переопределяются при старте контейнера)
+ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
