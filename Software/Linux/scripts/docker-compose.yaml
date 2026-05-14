@@ -26,11 +26,13 @@ services:
     command: >
       --model <path_to_model>
       --tensor-parallel-size 4
-      --gpu-memory-utilization 0.92
-      --max-model-len 32768
+      --gpu-memory-utilization 0.88
+      --max-model-len 262144
       --block-size 16
       --swap-space 64
       --disable-log-requests
+      # Примечание: для 1Cat-vLLM добавьте --attention-backend FLASH_ATTN_V100
+      # Для официального vLLM 0.18.x используйте --gpu-memory-utilization 0.95 и --max-model-len 32768
     deploy:
       resources:
         reservations:
