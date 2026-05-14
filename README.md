@@ -36,7 +36,7 @@ V-CORE - это схема охлаждения, которая объединя
 | Материнская плата | ASUS X99-E WS, мосты PLX для Quad-GPU |
 | ОЗУ | 8× 16 ГБ DDR4 ECC Registered, итого 128 ГБ |
 | БП | 2× Corsair HX1000 Platinum, синхронизация через Add2PSU |
-| NVMe | Samsung 990 Pro 2 ТБ, буфер для vLLM SWAP |
+| NVMe | Samsung 990 Pro 2 ТБ (или Kingston KC3000), буфер для vLLM SWAP |
 
 Полный список в [BOM-листе](./Docs/BOM/bom_list.md).
 
