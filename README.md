@@ -180,6 +180,7 @@ V-CORE - рабочее название схемы охлаждения, где
 - [Docs/Images](./Docs/Images) - логотип, рендеры, схемы и будущие фотографии сборки
 - [Software](./Software) - сборка Gentoo, настройка vLLM, мониторинг и дашборд Grafana
 - [Articles](./Articles) - статьи о проекте и промежуточные инженерные заметки
+- [Diagnosis/V100-SXM2-32G](./Software/Diagnosis/V100-SXM2-32G/) - контейнер диагностики 4x Tesla V100 SMX2 32Gb
 
 ### TODO по артефактам
 
