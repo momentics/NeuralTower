@@ -30,13 +30,16 @@ services:
       # вместо tensor-parallel-size и pipeline-parallel-size 
       --tensor-parallel-size 2
       --pipeline-parallel-size 2
-      --gpu-memory-utilization 0.88
-      --max-model-len 262144
+      --gpu-memory-utilization 0.95
+      # --enable-chunked-prefill true
+      --max-model-len 32768
+      --dtype float16
       --block-size 16
       --swap-space 64
       --disable-log-requests
-      # Примечание: для 1Cat-vLLM добавьте --attention-backend FLASH_ATTN_V100
+      # Примечание: для 1Cat-vLLM добавьте --attention-backend FLASH_ATTN_V100 --gpu-memory-utilization 0.88 --max-model-len 262144
       # Для официального vLLM 0.18.x используйте --gpu-memory-utilization 0.95 и --max-model-len 32768
+      --trust-remote-code
     deploy:
       resources:
         reservations:
