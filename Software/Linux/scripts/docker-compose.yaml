@@ -25,7 +25,11 @@ services:
       - "8000:8000"
     command: >
       --model <path_to_model>
-      --tensor-parallel-size 4
+      # Для демонстрации Full NVLink топологии, 
+      # использовать надо --tensor-parallel-size 4
+      # вместо tensor-parallel-size и pipeline-parallel-size 
+      --tensor-parallel-size 2
+      --pipeline-parallel-size 2
       --gpu-memory-utilization 0.88
       --max-model-len 262144
       --block-size 16
