@@ -6,13 +6,15 @@
 - **Конфигурация A (рекомендуемая):** 1Cat-vLLM — форк с FlashAttention-2 для V100 и AWQ 4-bit
 - **Конфигурация B (альтернативная):** Официальный vLLM 0.18.x с Triton-ядрами
 
+Параметры запуска моделей здесь приведены как базовый профиль после установки. Подробное обоснование TP/PP, NCCL и NVMe swap находится в [vllm_optimization.md](./vllm_optimization.md).
+
 ---
 
-## 1. Настройка и оптимизация OS
+## 1. Настройка и оптимизация ОС
 
 Для обеспечения максимальной производительности инференса на базе V100 и сохранения профиля безопасности системы, обновите глобальные флаги оптимизации компилятора GCC.
 
-### Настройка `/etc/portage/make.conf`:
+### 1.1. Настройка `/etc/portage/make.conf`
 
 ```make
 CFLAGS="-O3 -march=broadwell -pipe -flto=auto"
@@ -53,7 +55,7 @@ export PYTORCH_NVCC_FLAGS="-arch=sm_70"
 export MAX_JOBS=4
 ```
 
-### Различия между конфигурациями:
+### 2.1. Различия между конфигурациями
 
 | Параметр | Конфигурация A (1Cat-vLLM) | Конфигурация B (vLLM 0.18.x) |
 |----------|---------------------------|------------------------------|
@@ -93,7 +95,7 @@ pip install torch torchvision torchaudio \
 
 ## 5. Установка vLLM
 
-### Конфигурация A: 1Cat-vLLM (рекомендуется)
+### 5.1. Конфигурация A: 1Cat-vLLM
 
 Форк с восстановленной поддержкой V100, FlashAttention-2 и AWQ 4-bit:
 
@@ -105,7 +107,7 @@ python -m pip install --prefer-binary --no-cache-dir \
   "https://github.com/1CatAI/1Cat-vLLM/releases/download/v1.0.0/vllm-1.0.0-cp312-cp312-linux_x86_64.whl"
 ```
 
-### Конфигурация B: Официальный vLLM 0.18.x
+### 5.2. Конфигурация B: официальный vLLM 0.18.x
 
 Последняя версия с нативной поддержкой sm_70. Сборка из исходников:
 
@@ -127,7 +129,7 @@ TORCH_CUDA_ARCH_LIST="7.0" VLLM_USE_FLASH_ATTN=0 \
 cd ..
 ```
 
-### Альтернативный бэкенд: XFormers
+### 5.3. Альтернативный бэкенд: XFormers
 
 ```bash
 cd NeuralTower/Software/Linux
@@ -147,13 +149,14 @@ TORCH_CUDA_ARCH_LIST="7.0" pip install xformers --no-deps
 
 **Все модели должны запускаться с `--dtype float16`.**
 
-### Конфигурация A: 1Cat-vLLM
+### 6.1. Конфигурация A: 1Cat-vLLM
 
 ```bash
 python -m vllm.entrypoints.openai.api_server \
   --model /path/to/model \
   --attention-backend FLASH_ATTN_V100 \
-  --tensor-parallel-size 4 \
+  --tensor-parallel-size 2 \
+  --pipeline-parallel-size 2 \
   --dtype float16 \
   --gpu-memory-utilization 0.88 \
   --max-model-len 262144 \
@@ -161,7 +164,7 @@ python -m vllm.entrypoints.openai.api_server \
   --max-num-batched-tokens 16384
 ```
 
-### Конфигурация B: Официальный vLLM 0.18.x
+### 6.2. Конфигурация B: официальный vLLM 0.18.x
 
 ```bash
 export VLLM_ATTENTION_BACKEND=TRITON_ATTN
@@ -169,14 +172,15 @@ export VLLM_TENSORRT_LLM_TIMEOUT=600
 
 python -m vllm.entrypoints.openai.api_server \
   --model /path/to/model \
-  --tensor-parallel-size 4 \
+  --tensor-parallel-size 2 \
+  --pipeline-parallel-size 2 \
   --dtype float16 \
   --gpu-memory-utilization 0.95 \
   --swap-space 64 \
   --max-model-len 32768
 ```
 
-### Для больших моделей (70B+)
+### 6.3. Для больших моделей 70B+
 
 ```bash
 # Конфигурация A: AWQ квантизация
@@ -188,11 +192,12 @@ python -m vllm.entrypoints.openai.api_server \
 
 ---
 
-## Справочная таблица параметров
+## 7. Справочная таблица параметров
 
 | Параметр | Конфигурация A | Конфигурация B |
 |----------|---------------|---------------|
-| `--tensor-parallel-size` | 4 | 4 |
+| `--tensor-parallel-size` | 2 | 2 |
+| `--pipeline-parallel-size` | 2 | 2 |
 | `--gpu-memory-utilization` | 0.88 | 0.95 |
 | `--max-model-len` | 262144 | 32768 |
 | `--attention-backend` | FLASH_ATTN_V100 | TRITON_ATTN |
