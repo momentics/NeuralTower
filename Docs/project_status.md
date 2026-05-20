@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Общая архитектура | В проектировании | [../README.md](../README.md) |
 | Компоновка V-CORE | Проверяется расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md), [Calculations/air_dynamics.md](./Calculations/air_dynamics.md) |
-| Рама из профиля 20x20 | В проектировании | [../CAD/Frame/frame_assembly.md](../CAD/Frame/frame_assembly.md) |
+| Рама из профиля 20 x 20 мм | В проектировании | [../CAD/Frame/frame_assembly.md](../CAD/Frame/frame_assembly.md) |
 | Палуба с соплами | Проверяется расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md) |
 | Жидкостный контур | Проверяется расчетами | [Calculations/coolant_hydraulics.md](./Calculations/coolant_hydraulics.md) |
 | Электропитание | В проектировании | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
@@ -22,7 +22,7 @@
 ## Что уже готово
 
 - Выбрана платформа: ASUS X99-E WS, Xeon E5-2699v4, четыре Tesla V100 SXM2 32 GB и два SXM2 carrier board.
-- Определена базовая механика: профиль 20x20, нижняя камера давления 260 мм, палуба 500 x 430 мм, верхний вычислительный отсек 330 мм.
+- Определена базовая механика: профиль 20 x 20 мм, нижняя камера давления 260 мм, палуба 500 x 300 мм, верхний вычислительный отсек 330 мм.
 - Подготовлены расчетные записки по аэродинамике, гидравлике, объему теплоносителя, SlimSAS-трассам и пропускной способности PCIe/NVLink.
 - Описан программный путь для Volta: Gentoo Linux, CUDA 12.8, Python 3.12, 1Cat-vLLM или vLLM 0.18.x.
 - Подготовлен контейнер диагностики V100 на базе NVIDIA DCGM.
