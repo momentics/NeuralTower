@@ -12,6 +12,8 @@
 | [Docs/project_status.md](./Docs/project_status.md) | Текущий статус узлов, неподтвержденные гипотезы и план первичной проверки |
 | [Docs/BOM/bom_list.md](./Docs/BOM/bom_list.md) | Перечень компонентов, материалов и закупочных позиций |
 | [Docs/Calculations/air_dynamics.md](./Docs/Calculations/air_dynamics.md) | Расчет воздушной части V-CORE |
+| [CAD/Frame/frame_assembly.md](./CAD/Frame/frame_assembly.md) | Нарезка профиля, рельсы и силовые поперечины каркаса |
+| [CAD/Mounts/mounting_hardware.md](./CAD/Mounts/mounting_hardware.md) | Канонический порядок сборки нижнего отсека |
 | [CAD/Deck/deck_layout.md](./CAD/Deck/deck_layout.md) | Геометрия палубы, сопел и технологических проходов |
 | [Electrical/Pinouts/slimsas_mapping.md](./Electrical/Pinouts/slimsas_mapping.md) | Топология SlimSAS, слоты PCIe и порядок GPU |
 | [Hardware/BIOS/bios_settings.md](./Hardware/BIOS/bios_settings.md) | Настройки BIOS для V100, PLX и PCIe |
