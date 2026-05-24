@@ -1,0 +1,84 @@
+services:
+  sglang-server:
+    image: lmsysorg/sglang:latest
+    container_name: sglang_core_server
+    restart: always
+    ipc: host
+    network_mode: bridge
+    ports:
+      - "8000:8000"
+    environment:
+      # Жесткая изоляция тяжелого All-Reduce трафика внутри NVLink-мезонинов
+      - NCCL_P2P_LEVEL=NVL
+      - NCCL_IB_DISABLE=1
+      - NCCL_NET_PLUGIN=none
+      - CUDA_VISIBLE_DEVICES=0,1,2,3
+    volumes:
+      # Путь к локальному хранилищу моделей (измените на ваши реальные пути)
+      - /opt/llm/models:/models:ro
+      # Прямое монтирование Intel Optane U.2 для трехуровневого кэша HiCache
+      - /mnt/optane_u2/sglang_kv_cache:/mnt/optane_u2/sglang_kv_cache:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: >
+      python3 -m sglang.launch_server
+      --host 0.0.0.0
+      --port 8000
+      --tp-size 2
+      --pp-size 2
+      --dtype float16
+      --kv-cache-dtype int8
+      --context-length 1000000
+      --chunked-prefill-size 4096
+      --enable-dynamic-chunking
+      --enable-mixed-chunk
+      --enable-hicache
+      --hicache-storage-backend local_disk
+      --hicache-storage-path /mnt/optane_u2/sglang_kv_cache
+      --hicache-cpu-memory-limit-gb 48
+      --speculative-algorithm eagle
+      --speculative-draft /models/EAGLE-Qwen3.6-27B-Instruct
+      --speculative-num-tokens 3
+      --multi-model-manifest '{
+        "qwen-fast": {
+          "model_path": "/models/Qwen2.5-Coder-32B-Instruct",
+          "mem_fraction_static": 0.50
+        },
+        "qwen-heavy": {
+          "model_path": "/models/Qwen2.5-72B-Instruct-AWQ",
+          "mem_fraction_static": 0.40,
+          "schedule_policy": "on_demand"
+        }
+      }'
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: monitoring_prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_storage:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: monitoring_grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=it_is_temporary
+    volumes:
+      - grafana_storage:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus_storage:
+  grafana_storage:
