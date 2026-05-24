@@ -1,0 +1,29 @@
+# --- ОПТИМИЗАЦИЯ ПОД ВЫЧИСЛЕНИЯ И ТЕНЗОРНЫЕ ЯДРА ---
+CONFIG_PREEMPT_NONE=y
+# CONFIG_PREEMPT_VOLUNTARY is not set
+# CONFIG_PREEMPT is not set
+CONFIG_HZ_100=y
+# CONFIG_HZ_1000 is not set
+
+# --- ОТКЛЮЧЕНИЕ ПАРАЗИТНОГО ЛОГИРОВАНИЯ И АУДИТА ---
+# CONFIG_AUDIT is not set
+# CONFIG_AUDITSYSCALL is not set
+# CONFIG_SECURITY_AUDIT is not set
+
+# --- ПОЛНОЕ ОТКЛЮЧЕНИЕ ПРОГРАММНЫХ ЗАПЛАТОК ПРОЦЕССОРА ---
+# CONFIG_PAGE_TABLE_ISOLATION is not set
+# CONFIG_RETPOLINE is not set
+# CONFIG_CPU_MITIGATIONS is not set
+
+# --- СУПЕРКОМПЬЮТЕРНАЯ ОПТИМИЗАЦИЯ И ВИРТУАЛИЗАЦИЯ ПАМЯТИ ---
+CONFIG_NUMA=y
+CONFIG_AMD_NUMA=y
+CONFIG_TRANSPARENT_HUGEPAGE=y
+CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS=y
+CONFIG_CMA=y
+CONFIG_PCI_P2PDMA=y
+
+# --- ИЗОЛЯЦИЯ ПЛАНИРОВЩИКА ВВОДА-ВЫВОДА ДЛЯ INTEL OPTANE ---
+CONFIG_IOSCHED_NONE=y
+# CONFIG_MQ_IOSCHED_KYBER is not set
+# CONFIG_MQ_IOSCHED_BFQ is not set
