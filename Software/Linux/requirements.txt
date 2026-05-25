@@ -1,0 +1,9 @@
+# Зависимости для работы ML-стека и скриптов мониторинга в NeuralTower
+numpy
+transformers>=4.45.0
+accelerate>=0.30.0
+sentencepiece
+protobuf
+pydantic
+psutil
+pynvml

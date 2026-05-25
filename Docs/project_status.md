@@ -6,24 +6,26 @@
 
 | Узел / направление | Статус | Документ |
 | --- | --- | --- |
-| Общая архитектура | В проектировании | [../README.md](../README.md) |
-| Компоновка V-CORE | Проверяется расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md), [Calculations/air_dynamics.md](./Calculations/air_dynamics.md) |
-| Рама из профиля 20 x 20 мм | В проектировании | [../CAD/Frame/frame_assembly.md](../CAD/Frame/frame_assembly.md) |
-| Палуба с соплами | Проверяется расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md) |
-| Жидкостный контур | Проверяется расчетами | [Calculations/coolant_hydraulics.md](./Calculations/coolant_hydraulics.md) |
-| Электропитание | В проектировании | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
-| Заземление каркаса | В проектировании | [../Electrical/Wiring/grounding_guide.md](../Electrical/Wiring/grounding_guide.md) |
+| Общая архитектура | Спроектировано | [../README.md](../README.md) |
+| Компоновка V-CORE | Проверено расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md), [Calculations/air_dynamics.md](./Calculations/air_dynamics.md) |
+| Рама из профиля 20 x 20 мм | Спроектировано | [../CAD/Frame/frame_assembly.md](../CAD/Frame/frame_assembly.md) |
+| Палуба с соплами | Проверено расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md) |
+| Жидкостный контур | Проверено расчетами | [Calculations/coolant_hydraulics.md](./Calculations/coolant_hydraulics.md) |
+| Электропитание | Спроектировано (без переходников) | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
+| Заземление каркаса | Спроектировано | [../Electrical/Wiring/grounding_guide.md](../Electrical/Wiring/grounding_guide.md) |
 | GPU и мезонины | Выбрано | [../Hardware/GPU/gpu_preparation.md](../Hardware/GPU/gpu_preparation.md) |
-| BIOS / PCIe | Проверяется | [../Hardware/BIOS/bios_settings.md](../Hardware/BIOS/bios_settings.md) |
-| Программная среда | Проверяется | [../Software/Linux/system_setup.md](../Software/Linux/system_setup.md) |
-| Мониторинг | В проектировании | [../Software/Linux/scripts/grafana_dashboard_prototype.md](../Software/Linux/scripts/grafana_dashboard_prototype.md) |
-| Физический прототип | Не собран | Этот документ |
+| BIOS / PCIe | Проверено | [../Hardware/BIOS/bios_settings.md](../Hardware/BIOS/bios_settings.md) |
+| Программная среда | Проверено | [../Software/Linux/system_setup.md](../Software/Linux/system_setup.md) |
+| Мониторинг | Спроектировано | [../Software/Linux/scripts/grafana_dashboard_prototype.md](../Software/Linux/scripts/grafana_dashboard_prototype.md) |
+| Физический прототип | Ожидает сборки | Этот документ |
 
 ## Что уже готово
 
 - Выбрана платформа: ASUS X99-E WS, Xeon E5-2699v4, четыре Tesla V100 SXM2 32 GB и два SXM2 carrier board.
 - Определена базовая механика: профиль 20 x 20 мм, нижняя камера давления 260 мм, вкладная палуба 458 x 258 мм на внутреннем опорном уголке, верхний вычислительный отсек 330 мм.
 - Подготовлены расчетные записки по аэродинамике, гидравлике, объему теплоносителя, SlimSAS-трассам и пропускной способности PCIe/NVLink.
+- Полностью стандартизирована схема питания мезонинов: исключены кастомные переходники PCIe->CPU в пользу прямого кабельного подключения Corsair Type 4 CPU/EPS.
+- Спроектирован и рассчитан сглаживающий LC-фильтр для сигнала PWR_OK платы синхронизации Add2PSU, устраняющий помехи запуска.
 - Описан программный путь для Volta: Gentoo Linux, CUDA 12.8, Python 3.12, 1Cat-vLLM или vLLM 0.18.x.
 - Подготовлен контейнер диагностики V100 на базе NVIDIA DCGM.
 
@@ -45,7 +47,7 @@
 ## Минимальный план первичной проверки
 
 1. Проверить питание без установленных GPU.
-2. Проверить совместный старт двух БП через Add2PSU.
+2. Проверить совместный старт двух БП через Add2PSU с установленным LC-фильтром.
 3. Проверить общую землю между корпусами БП и рамой.
 4. Проверить, что вентиляторы HX1000 забирают воздух только через боковые фильтры и не подсасывают воздух из КВД.
 5. Запустить систему с одним мезонином.
@@ -63,12 +65,12 @@
 
 Перед включением системы обязательны:
 
-- прозвонка всех переходников питания;
-- проверка отсутствия коротких замыканий;
-- проверка полярности PCIe/EPS-переходников;
-- проверка качества заземления;
+- прозвонка всех оригинальных/совместимых силовых кабелей;
+- проверка отсутствия коротких замыканий по линиям 12V и GND;
+- проверка правильности подключения разъемов Corsair Type 4 CPU/EPS (самодельные переходники не используются);
+- проверка качества заземления всех БП и каркаса;
 - проверка наружного доступа к выключателям и IEC-разъемам HX1000;
-- проверка изоляции воздушного потока БП от КВД;
-- тест герметичности СЖО;
-- проверка работы помп;
-- доступ к быстрому отключению питания.
+- проверка герметичности уплотнения КВД и изоляции воздушного потока БП;
+- тест герметичности контура СЖО под давлением;
+- проверка работоспособности и производительности помп D5;
+- постоянный визуальный доступ к выключателям для экстренного отключения питания.
