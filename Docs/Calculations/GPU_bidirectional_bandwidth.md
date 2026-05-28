@@ -31,4 +31,4 @@
 | Внутри Мезонина 1 (GPU 0 $\leftrightarrow$ GPU 1) | 150 ГБ/с | 300 ГБ/с | Напрямую через мосты NVLink |
 | Внутри Мезонина 2 (GPU 2 $\leftrightarrow$ GPU 3) | 150 ГБ/с | 300 ГБ/с | Напрямую через мосты NVLink |
 | Между Мезонинами (Например, GPU 0 $\leftrightarrow$ GPU 2) | ~28.4 ГБ/с (суммарно) | ~56.8 ГБ/с (суммарно) | Адаптеры SlimSAS $\rightarrow$ Чипы PLX $\rightarrow$ Процессор |
-| Стриминг весов / SWAP (GPU $\leftrightarrow$ NVMe Kingston KC3000) | ~3.5 ГБ/с | ~7.0 ГБ/с | Ограничение интерфейса М.2 PCIe 3.0 x4 на плате |
+| Стриминг весов / SWAP (GPU $\leftrightarrow$ NVMe Intel DC P4510) | ~3.5 ГБ/с | ~7.0 ГБ/с | Ограничение интерфейса PCIe 3.0 x4 на плате |
