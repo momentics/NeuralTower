@@ -34,7 +34,7 @@
 | GPU | 4× Tesla V100 SXM2 32 ГБ |
 | Мезонины | 2× SXM2 Carrier Board с NVLink 2.0 |
 | Материнская плата | ASUS X99-E WS, мосты PLX для Quad-GPU |
-| ОЗУ | 8× 16 ГБ DDR4 ECC Registered |
+| ОЗУ | 8× 32 ГБ DDR4 ECC Registered (256 ГБ) |
 | БП | 2× Corsair HX1500i Platinum, синхронизация через Add2PSU |
 | NVMe | Kingston KC3000 2 ТБ, буфер для vLLM SWAP |
 
