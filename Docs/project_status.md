@@ -11,7 +11,8 @@
 | Рама из профиля 20 x 20 мм | Спроектировано | [../CAD/Frame/frame_assembly.md](../CAD/Frame/frame_assembly.md) |
 | Палуба с соплами | Проверено расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md) |
 | Жидкостный контур | Проверено расчетами | [Calculations/coolant_hydraulics.md](./Calculations/coolant_hydraulics.md) |
-| Электропитание | Спроектировано (без переходников) | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
+| Электропитание | Спроектировано | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
+| Синхронный запуск | Спроектировано | [../Docs/Calculations/power_cables.md](../Docs/Calculations/power_cables.md) [../Docs/Calculations/LC_filter.md](../Docs/Calculations/LC_filter.md) |
 | Заземление каркаса | Спроектировано | [../Electrical/Wiring/grounding_guide.md](../Electrical/Wiring/grounding_guide.md) |
 | GPU и мезонины | Выбрано | [../Hardware/GPU/gpu_preparation.md](../Hardware/GPU/gpu_preparation.md) |
 | BIOS / PCIe | Проверено | [../Hardware/BIOS/bios_settings.md](../Hardware/BIOS/bios_settings.md) |
