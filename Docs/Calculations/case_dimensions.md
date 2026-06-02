@@ -20,10 +20,10 @@
 
 Источники:
 
-- [ASUS X99-E WS User Guide](../../Manuals/ASUS%20X99-E%20WS/ASUS-X99-E-WS.pdf): форм-фактор CEB, 305 x 267 мм.
-- [Corsair HX1500i](../../Manuals/Corsair%20HX1500i/corsair-hx1500i.pdf): 150 x 86 x 180 мм.
-- [Bykski CR-RD360RC-TK60-V2](../../Manuals/Bykski%20CR-RD360RC-TK60-V2/): 395.5 x 122 x 60 мм, 14 FPI, 14 каналов.
-- [Thermaltake TOUGHFAN 12](../../Manuals/Thermaltake%20TOUGHFAN%2012/fan_dm.pdf): 120 x 120 x 25 мм, 58.35 CFM, 2.41 мм H2O.
+- [ASUS X99-E WS User Guide](../../Manuals/ASUS-X99-E-WS/ASUS-X99-E-WS.pdf): форм-фактор CEB, 305 x 267 мм.
+- [Corsair HX1500i](../../Manuals/Corsair%20HX1500i/Corsair-HX1500i.pdf): 150 x 86 x 180 мм.
+- [Bykski CR-RD360RC-TK60-V2](../../Manuals/Bykski-CR-RD360RC-TK60-V2/): 395.5 x 122 x 60 мм, 14 FPI, 14 каналов.
+- [Thermaltake TOUGHFAN 12](../../Manuals/Thermaltake-TOUGHFAN-12/fan_dm.pdf): 120 x 120 x 25 мм, 58.35 CFM, 2.41 мм H2O.
 - Dual V100 SXM2 NVLink carrier: 170 x 236 мм по описанию поставщиков таких плат. Это не официальный механический даташит, поэтому под мезонин закладывается запас.
 - [Bykski B-UL-D5-X-V4](../../Manuals/B-UL-D5-X-V4/): база 79.4 x 69 мм, установленный резервуар - 60 мм без учета самой помпы.
 
