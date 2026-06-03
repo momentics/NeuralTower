@@ -23,7 +23,7 @@
 
 **Запас мощности:** 2x HX1500i = 3000W, а требуется 2213W ( surplus 26%)
 
-Подробное распределение нагрузки между блоками питания приведено в [power_distribution.md](Electrical/Wiring/power_distribution.md).
+Подробное распределение нагрузки между блоками питания приведено в [power_distribution.md](../../Electrical/Wiring/power_distribution.md).
 
 ## Ведущий HX1500i (Master)
 
