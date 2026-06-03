@@ -1,53 +1,19 @@
 import json
 import os
 import math
-import urllib.request
 from typing import List, Dict, Any
 from transformers import AutoTokenizer
+from tasks_pool import get_programming_scenario, get_data_analysis_scenario, get_tech_doc_scenario
 
 MODEL_NAME = "Qwen/Qwen3.6-27B"
+
+DOMAINS = ["programming", "data_analysis", "tech_documentation"]
 
 class NeuralTowerBenchmarkGenerator:
     def __init__(self, model_name: str):
         print(f"[~] Загрузка токенизатора для {model_name}...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
         print("[+] Токенизатор успешно загружен.")
-
-    def download_real_noise(self) -> str:
-        """
-        Скачивает подлинные тяжелые текстовые файлы (исходный код ядра Linux, системные логи)
-        для создания массивного, уникального и нелинейного шумового контекста.
-        """
-        urls = [
-            "https://githubusercontent.com",
-            "https://githubusercontent.com",
-            "https://githubusercontent.com"
-        ]
-        
-        combined_noise = []
-        print("[~] Загрузка реальных массивов данных для шумового контекста...")
-        
-        for url in urls:
-            try:
-                print(f" -> Скачивание: {url.split('/')[-1]}")
-                with urllib.request.urlopen(url, timeout=15) as response:
-                    combined_noise.append(response.read().decode('utf-8', errors='ignore'))
-            except Exception as e:
-                print(f" [!] Не удалось скачать {url}, используем локальный резерв. Ошибка: {e}")
-        
-        # Если интернета нет или ссылки недоступны, создаем тяжелый псевдо-уникальный лог
-        if not combined_noise:
-            print("[!] Ссылки недоступны. Генерируем массив уникальных структурированных логов...")
-            base_logs = []
-            for i in range(50000):
-                base_logs.append(
-                    f"TIMESTAMP_2026_06_03_{i:06d} [PID {1000+i}] INFO [Subsystem-VCORE] "
-                    f"Telemetry metrics offset: VRAM_USED={12.4 + (i%8)*11.2:.2f}GB, "
-                    f"SlimSAS_Tx_Rate={850 + (i%3)*50}MB/s, Bus_Id={hex(i)}, Thread_State_Check=OK."
-                )
-            return "\n".join(base_logs)
-            
-        return "\n".join(combined_noise)
 
     def generate_context(
         self, 
@@ -59,6 +25,12 @@ class NeuralTowerBenchmarkGenerator:
     ) -> Dict[str, Any]:
         """
         Генерирует финальный контекст заданной длины в токенах.
+        
+        :param noise_text: Огромный массив фонового текста (тех. документация / код)
+        :param target_tokens: Целевой размер контекста (например, 64000)
+        :param prompt_template: Шаблон инструкции/вопроса, который крепится в самый конец
+        :param target_fragment: Текст когнитивного триггера (логическая задача)
+        :param position: Где разместить целевой фрагмент ('beginning', 'middle', 'end')
         """
         target_fragment_tokens = self.tokenizer.encode(target_fragment)
         prompt_tokens = self.tokenizer.encode(prompt_template)
@@ -69,11 +41,7 @@ class NeuralTowerBenchmarkGenerator:
 
         noise_budget = target_tokens - fixed_tokens_len
         
-        # Токенизируем уникальный массив шума
         encoded_noise = self.tokenizer.encode(noise_text, add_special_tokens=False)
-        
-        # Если уникального текста всё ещё меньше, чем терабайтный предел в 1024к, 
-        # только тогда мы безопасно дублируем массив, но уже огромными уникальными кусками
         if len(encoded_noise) < noise_budget:
             repeats = math.ceil(noise_budget / len(encoded_noise))
             encoded_noise = (encoded_noise * repeats)[:noise_budget]
@@ -96,6 +64,7 @@ class NeuralTowerBenchmarkGenerator:
         )
         
         final_tokens = final_tokens[:target_tokens]
+
         final_text = self.tokenizer.decode(final_tokens, skip_special_tokens=False)
         
         return {
@@ -112,9 +81,7 @@ class NeuralTowerBenchmarkGenerator:
 if __name__ == "__main__":
     generator = NeuralTowerBenchmarkGenerator(MODEL_NAME)
     
-    # ПОЛУЧЕНИЕ НАСТОЯЩЕГО БОЛЬШОГО ОБЪЕМА ДАННЫХ
-    real_heavy_noise = generator.download_real_noise()
-    print(f"[+] Пул уникального фонового шума подготовлен. Символов: {len(real_heavy_noise)}")
+    mock_noise = "System architecture trace. V-CORE air dynamics parameters nominal. SlimSAS mapping active. " * 8000 
     
     dense_context_sizes = [
         ("2k", 2000),      ("4k", 4000),      ("8k", 8000),      ("16k", 16000),
@@ -126,32 +93,36 @@ if __name__ == "__main__":
     
     positions = ["beginning", "middle", "end"]
     
-    import tasks_pool
-    
     scenarios = {
-        "programming": tasks_pool.get_programming_scenario(),
-        "data_analysis": tasks_pool.get_data_analysis_scenario(),
-        "tech_documentation": tasks_pool.get_tech_doc_scenario()
+        "programming": get_programming_scenario(),
+        "data_analysis": get_data_analysis_scenario(),
+        "tech_documentation": get_tech_doc_scenario()
     }
     
-    base_output_dir = "./neural_tower_dense_benchmarks"
-    os.makedirs(base_output_dir, exist_ok=True)
+    output_dir = "./neural_tower_dense_benchmarks"
+    os.makedirs(output_dir, exist_ok=True)
     
-    print("\n[~] Запуск последовательной генерации пакетов по доменам (по возрастанию)...")
+    print("\n[~] Запуск последовательной генерации пакетов (по возрастанию)...")
     
-    for domain_name, task_data in scenarios.items():
-        domain_dir = os.path.join(base_output_dir, domain_name)
+    for domain in DOMAINS:
+        domain_dir = os.path.join(output_dir, domain)
         os.makedirs(domain_dir, exist_ok=True)
-        print(f"\n⚡ Генерация домена: {domain_name.upper()}")
+        
+        print(f"\n[ДОМЕН: {domain.upper()}]")
+        
+        target_fragment = scenarios[domain]["target_fragment"]
+        prompt_template = scenarios[domain]["prompt"]
         
         for size_label, size_tokens in dense_context_sizes:
+            print(f"\n[ РАБОТА С ОБЪЕМОМ: {size_label} ({size_tokens} токенов) ]")
             for pos in positions:
+                print(f" -> Генерация подзадачи: Позиция целевого фрагмента = {pos}...")
                 try:
                     test_case = generator.generate_context(
-                        noise_text=real_heavy_noise,
+                        noise_text=mock_noise,
                         target_tokens=size_tokens,
-                        prompt_template=task_data["prompt"],
-                        target_fragment=task_data["target_fragment"],
+                        prompt_template=prompt_template,
+                        target_fragment=target_fragment,
                         position=pos
                     )
                     
@@ -160,6 +131,6 @@ if __name__ == "__main__":
                         json.dump(test_case, f, ensure_ascii=False, indent=2)
                         
                 except Exception as e:
-                    print(f" [!] Пропуск или ошибка в {domain_name} ({size_label}_{pos}): {e}")
+                    print(f" [!] Не удалось сгенерировать конфигурацию {size_label}_{pos}: {e}")
 
-    print(f"\n[+] ГЕНЕРАЦИЯ ЗАВЕРШЕНА. Результаты распределены по папкам в '{base_output_dir}'.")
+    print(f"\n[+] ГЕНЕРАЦИЯ ЗАВЕРШЕНА. Результаты сохранены в '{output_dir}'.")

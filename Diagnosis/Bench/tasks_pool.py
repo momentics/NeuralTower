@@ -5,7 +5,7 @@ def get_programming_scenario() -> Dict[str, str]:
     ДОМЕН: Программирование и Архитектура систем.
     ТЕСТ: Каскадная порча памяти через race condition в многопоточном драйвере.
     """
-    needle_text = (
+    target_fragment = (
         "\n[SYSTEM_KERNEL_PATCH: REVISION 4.12.8]\n"
         "// Факт 1: Драйвер подсистемы NeuralTower DMA использует кольцевой буфер `nt_ring_buffer`.\n"
         "// Указатель записи `write_ptr` обновляется БЕЗ атомарного барьера памяти (Memory Barrier) в функции `nt_push_tail`.\n"
@@ -29,7 +29,7 @@ def get_programming_scenario() -> Dict[str, str]:
         "}"
     )
     
-    return {"needle": needle_text, "prompt": prompt_template}
+    return {"target_fragment": target_fragment, "prompt": prompt_template}
 
 
 def get_data_analysis_scenario() -> Dict[str, str]:
@@ -37,7 +37,7 @@ def get_data_analysis_scenario() -> Dict[str, str]:
     ДОМЕН: Анализ данных и Логика.
     ТЕСТ: Скрытый циклический граф владения и размытия долей (Капитализация холдинга).
     """
-    needle_text = (
+    target_fragment = (
         "\n[FINANCIAL_AUDIT_LEDGER: INTERNAL_USE_ONLY]\n"
         "Утверждение Альфа: Инвестиционный пул 'Momentics Core' напрямую контролирует 42% голосующих акций АО 'НейралТауэр'.\n"
         "Утверждение Бета: Материнская компания 'Tower Holding' выкупила 100% активов фонда 'Momentics Core' в третьем квартале.\n"
@@ -59,7 +59,7 @@ def get_data_analysis_scenario() -> Dict[str, str]:
         "}"
     )
     
-    return {"needle": needle_text, "prompt": prompt_template}
+    return {"target_fragment": target_fragment, "prompt": prompt_template}
 
 
 def get_tech_doc_scenario() -> Dict[str, str]:
@@ -67,7 +67,7 @@ def get_tech_doc_scenario() -> Dict[str, str]:
     ДОМЕН: Анализ и написание технической документации.
     ТЕСТ: Конфликт физических допусков в смежных подсистемах охлаждения и электропитания.
     """
-    needle_text = (
+    target_fragment = (
         "\n[HARDWARE_SPECIFICATION: SECTION_7_COOLING]\n"
         "Пункт 7.3.4: При пиковой нагрузке серверов NeuralTower гидросистема охлаждения контура V-CORE переходит в режим "
         "повышенного давления. Максимальное критическое давление, которое способны выдержать фитинги SlimSAS-охладителей, "
@@ -93,4 +93,4 @@ def get_tech_doc_scenario() -> Dict[str, str]:
         "}"
     )
     
-    return {"needle": needle_text, "prompt": prompt_template}
+    return {"target_fragment": target_fragment, "prompt": prompt_template}
