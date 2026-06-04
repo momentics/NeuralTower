@@ -30,7 +30,7 @@
 
 | Компонент | Что стоит |
 |---|---|
-| CPU | Xeon E5-2699v4, 22 ядра / 44 потока |
+| CPU | Xeon E5-2687W v4, 12 ядер / 24 потока |
 | GPU | 4× Tesla V100 SXM2 32 ГБ |
 | Мезонины | 2× SXM2 Carrier Board с NVLink 2.0 |
 | Материнская плата | ASUS X99-E WS, мосты PLX для Quad-GPU |
