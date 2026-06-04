@@ -4,3 +4,4 @@ sentencepiece>=0.1.99
 vLLM>=0.6.0
 requests>=2.31.0
 matplotlib>=3.8.0
+numpy>=1.26.0

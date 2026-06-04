@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 RESULTS_DIR = "./neural_tower_benchmark_results"
 

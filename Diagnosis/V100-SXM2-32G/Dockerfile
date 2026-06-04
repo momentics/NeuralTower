@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Добавляем официальный репозиторий NVIDIA DCGM для Ubuntu 22.04
-RUN curl -fsSL https://nvidia.com | gpg --dearmor -o /usr/share/keyrings/nvidia-drivers.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/nvidia-drivers.gpg] https://nvidia.com /" > /etc/apt/sources.list.d/nvidia-gputools.list
+RUN curl -fsSL https://nvidia.github.io/dcgm-pkg | gpg --dearmor -o /usr/share/keyrings/nvidia-drivers.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/nvidia-drivers.gpg] https://nvidia.github.io/dcgm-pkg /" > /etc/apt/sources.list.d/nvidia-gputools.list
 
 # Устанавливаем пакет Data Center GPU Manager (DCGM)
 RUN apt-get update && apt-get install -y --no-install-recommends \

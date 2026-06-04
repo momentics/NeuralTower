@@ -25,7 +25,7 @@ class NeuralTowerPlotter:
         report_data = self._load_report()
         positions = ["beginning", "middle", "end"]
         pos_labels = {"beginning": "Начало (5%)", "middle": "Середина (50%)", "end": "Конец (95%)"}
-        pos_colors = {"beginning": "#2ecc71", "middle": "#e67e22", "red_end": "#e74c3c"} # Цвета для графиков
+        pos_colors = {"beginning": "#2ecc71", "middle": "#e67e22", "end": "#e74c3c"} # Цвета для графиков
         
         # Настройка стиля отображения графиков
         plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
