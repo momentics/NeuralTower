@@ -31,6 +31,7 @@
 | Палуба с соплами | Проверено расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md) |
 | Жидкостный контур | Проверено расчетами | [Calculations/coolant_hydraulics.md](./Calculations/coolant_hydraulics.md) |
 | Электропитание | Спроектировано | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
+| PSU-узел (крепление, изоляция) | Спроектировано, полная спецификация | [../CAD/PSU/psu_mounting_regulation.md](../CAD/PSU/psu_mounting_regulation.md) |
 | Синхронный запуск | Спроектировано | [../Docs/Calculations/power_cables.md](../Docs/Calculations/power_cables.md) [../Docs/Calculations/LC_filter.md](../Docs/Calculations/LC_filter.md) |
 | Заземление каркаса | Спроектировано | [../Electrical/Wiring/grounding_guide.md](../Electrical/Wiring/grounding_guide.md) |
 | GPU и мезонины | Выбрано, PoC подтвержден | [../Hardware/GPU/gpu_preparation.md](../Hardware/GPU/gpu_preparation.md) |

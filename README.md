@@ -15,6 +15,7 @@
 | [CAD/Frame/frame_assembly.md](./CAD/Frame/frame_assembly.md) | Нарезка профиля, рельсы и силовые поперечины каркаса |
 | [CAD/Mounts/mounting_hardware.md](./CAD/Mounts/mounting_hardware.md) | Канонический порядок сборки нижнего отсека |
 | [CAD/Deck/deck_layout.md](./CAD/Deck/deck_layout.md) | Геометрия палубы, сопел и технологических проходов |
+| [CAD/PSU/psu_mounting_regulation.md](./CAD/PSU/psu_mounting_regulation.md) | Полный регламент PSU-узла: кронштейны, изоляция, панели, кабели, заземление |
 | [Electrical/Pinouts/slimsas_mapping.md](./Electrical/Pinouts/slimsas_mapping.md) | Топология SlimSAS, слоты PCIe и порядок GPU |
 | [Hardware/BIOS/bios_settings.md](./Hardware/BIOS/bios_settings.md) | Настройки BIOS для V100, PLX и PCIe |
 | [Software/Linux/system_setup.md](./Software/Linux/system_setup.md) | Порядок подготовки ОС и первого запуска |
