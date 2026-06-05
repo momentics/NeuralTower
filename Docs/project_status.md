@@ -1,11 +1,30 @@
 # Статус проекта и план проверки
 
-Документ фиксирует текущую степень подтверждения решений. До сборки физического прототипа тепловые, акустические и часть электрических выводов считаются расчетными.
+Документ фиксирует текущую степень подтверждения решений. Proof of Concept успешно завершен: стенд из двух GPU V100 SXM2 32 ГБ на одном мезонине собран, протестирован и показал работоспособность всей цепочки PCIe-SlimSAS-GPU с инференсом модели Qwen3.6-27B на скорости 32,69 токена в секунду. Полноценная сборка на четырех GPU с жидкостным охлаждением и двумя блоками питания находится в стадии подготовки. Тепловые, акустические и часть электрических выводов для полной конфигурации считаются расчетными до сборки финального узла.
+
+## Proof of Concept
+
+| Параметр | Значение |
+| --- | --- |
+| Статус | Завершено успешно |
+| GPU | 2x NVIDIA Tesla V100 SXM2 32 ГБ (GV100-886A-A1) |
+| Мезонин | 1x TNS-2SXM2-4P54 (JBS-SXM2-4P54-V13A) |
+| Адаптеры SlimSAS | RTE162P54B-2UR, дата выпуска 30 января 2026 года |
+| Охлаждение | Воздушное (башенные радиаторы с вентиляторами) |
+| Питание | Thermaltake Toughpower 1200W (TPD-1200AH2FKP) |
+| Платформа тестирования | Настольный ПК с Windows |
+| Движок инференса | LM Studio 0.4 |
+| Модель | Qwen3.6-27B |
+| Результат | Средняя скорость 32,69 токена в секунду |
+
+Детальная расшифровка маркировок оборудования PoC: [../Diagnosis/V100-SXM2-32G/PoC.md](../Diagnosis/V100-SXM2-32G/PoC.md)
+Результаты тестов и выводы PoC: [../Diagnosis/V100-SXM2-32G/README.md](../Diagnosis/V100-SXM2-32G/README.md)
 
 ## Текущий статус
 
 | Узел / направление | Статус | Документ |
 | --- | --- | --- |
+| Proof of Concept (2 GPU) | Завершено и подтверждено | [../Diagnosis/V100-SXM2-32G/PoC.md](../Diagnosis/V100-SXM2-32G/PoC.md) |
 | Общая архитектура | Спроектировано | [../README.md](../README.md) |
 | Компоновка V-CORE | Проверено расчетами | [../CAD/Deck/deck_layout.md](../CAD/Deck/deck_layout.md), [Calculations/air_dynamics.md](./Calculations/air_dynamics.md) |
 | Рама из профиля 20 x 20 мм | Спроектировано | [../CAD/Frame/frame_assembly.md](../CAD/Frame/frame_assembly.md) |
@@ -14,11 +33,11 @@
 | Электропитание | Спроектировано | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
 | Синхронный запуск | Спроектировано | [../Docs/Calculations/power_cables.md](../Docs/Calculations/power_cables.md) [../Docs/Calculations/LC_filter.md](../Docs/Calculations/LC_filter.md) |
 | Заземление каркаса | Спроектировано | [../Electrical/Wiring/grounding_guide.md](../Electrical/Wiring/grounding_guide.md) |
-| GPU и мезонины | Выбрано | [../Hardware/GPU/gpu_preparation.md](../Hardware/GPU/gpu_preparation.md) |
-| BIOS / PCIe | Проверено | [../Hardware/BIOS/bios_settings.md](../Hardware/BIOS/bios_settings.md) |
+| GPU и мезонины | Выбрано, PoC подтвержден | [../Hardware/GPU/gpu_preparation.md](../Hardware/GPU/gpu_preparation.md) |
+| BIOS / PCIe | Проверено на PoC | [../Hardware/BIOS/bios_settings.md](../Hardware/BIOS/bios_settings.md) |
 | Программная среда | Проверено | [../Software/Linux/system_setup.md](../Software/Linux/system_setup.md) |
 | Мониторинг | Спроектировано | [../Software/Linux/scripts/grafana_dashboard_prototype.md](../Software/Linux/scripts/grafana_dashboard_prototype.md) |
-| Физический прототип | Ожидает сборки | Этот документ |
+| Полноценная сборка (4 GPU) | Ожидает сборки | Этот документ |
 
 ## Что уже готово
 
