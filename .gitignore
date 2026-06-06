@@ -2,3 +2,5 @@ Docs/BOM/zakaz.xlsx
 ~$*
 llama.cpp/
 *.zip
+.vscode
+.*
