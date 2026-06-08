@@ -32,7 +32,7 @@
 | Жидкостный контур | Проверено расчетами | [Calculations/coolant_hydraulics.md](./Calculations/coolant_hydraulics.md) |
 | Электропитание | Спроектировано | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
 | PSU-узел (крепление, изоляция) | Спроектировано, полная спецификация | [../CAD/PSU/psu_mounting_regulation.md](../CAD/PSU/psu_mounting_regulation.md) |
-| Синхронный запуск | Спроектировано | [../Docs/Calculations/power_cables.md](../Docs/Calculations/power_cables.md) [../Docs/Calculations/LC_filter.md](../Docs/Calculations/LC_filter.md) |
+| Синхронный запуск | Спроектировано | [../Electrical/Wiring/power_distribution.md](../Electrical/Wiring/power_distribution.md) |
 | Заземление каркаса | Спроектировано | [../Electrical/Wiring/grounding_guide.md](../Electrical/Wiring/grounding_guide.md) |
 | GPU и мезонины | Выбрано, PoC подтвержден | [../Hardware/GPU/gpu_preparation.md](../Hardware/GPU/gpu_preparation.md) |
 | BIOS / PCIe | Проверено на PoC | [../Hardware/BIOS/bios_settings.md](../Hardware/BIOS/bios_settings.md) |
@@ -47,7 +47,7 @@
 - Подготовлены расчетные записки по аэродинамике, гидравлике, объему теплоносителя, SlimSAS-трассам и пропускной способности PCIe/NVLink.
 - Полностью стандартизирована схема питания мезонинов: исключены кастомные переходники PCIe->CPU в пользу прямого кабельного подключения Corsair Type 4 CPU/EPS.
 - Смонтированы только GPU 8-pin и CPU 8-pin входы мезонинов (без ATX 24-pin).
-- Спроектирован и рассчитан сглаживающий LC-фильтр для сигнала PWR_OK платы синхронизации Add2PSU, устраняющий помехи запуска.
+- Определена схема синхронизации запуска двух БП через Add2PSU HZ-0001 с MOSFET-коммутацией без дребезга.
 - Описан программный путь для Volta: Gentoo Linux, CUDA 12.8, Python 3.12, 1Cat-vLLM или vLLM 0.18.x.
 - Подготовлен контейнер диагностики V100 на базе NVIDIA DCGM.
 
@@ -69,7 +69,7 @@
 ## Минимальный план первичной проверки
 
 1. Проверить питание без установленных GPU.
-2. Проверить совместный старт двух БП через Add2PSU с установленным LC-фильтром.
+2. Проверить совместный старт двух БП через Add2PSU.
 3. Проверить общую землю между корпусами БП и рамой.
 4. Проверить, что вентиляторы HX1500i забирают воздух только через боковые фильтры и не подсасывают воздух из КВД.
 
