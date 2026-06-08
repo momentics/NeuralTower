@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  gpu-check:
+    image: nvidia/cuda:12.8.0-base-ubuntu24.04
+    container_name: neural_tower_gpu_check
+    runtime: nvidia
+    privileged: true
+    volumes:
+      - /var/log:/var/log
+      - ./gpu_watchdog.sh:/gpu_watchdog.sh:ro
+    command: ["/bin/bash", "/gpu_watchdog.sh"]
+    restart: "no"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
+
   vllm:
     image: vllm/vllm-openai:latest
     container_name: neural_tower_vllm
@@ -10,7 +28,7 @@ services:
       memlock: -1
       stack: 67108864
     # Привязка к физическим ядрам Xeon (исключая системные 0-1) для исключения переключений контекста
-    cpuset: "2-43" 
+    cpuset: "2-43"
     ipc: host
     privileged: true # Необходимо для прямого доступа к NVMe swap-разделу
     environment:
@@ -21,13 +39,17 @@ services:
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
       - /dev/nvme0n1:/dev/nvme0n1 # Прямой проброс блочного устройства для SWAP
+      - /var/log:/var/log
     ports:
       - "8000:8000"
+    depends_on:
+      gpu-check:
+        condition: service_completed_successfully
     command: >
       --model <path_to_model>
-      # Для демонстрации Full NVLink топологии, 
+      # Для демонстрации Full NVLink топологии,
       # использовать надо --tensor-parallel-size 4
-      # вместо tensor-parallel-size и pipeline-parallel-size 
+      # вместо tensor-parallel-size и pipeline-parallel-size
       --tensor-parallel-size 2
       --pipeline-parallel-size 2
       --gpu-memory-utilization 0.95
@@ -48,6 +70,28 @@ services:
               count: 4
               capabilities: [gpu, compute, utility]
     restart: always
+
+  gpu-watchdog:
+    image: nvidia/cuda:12.8.0-base-ubuntu24.04
+    container_name: neural_tower_gpu_watchdog
+    runtime: nvidia
+    privileged: true
+    volumes:
+      - /var/log:/var/log
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp
+      - ./gpu_watchdog_loop.sh:/gpu_watchdog_loop.sh:ro
+    command: ["/bin/bash", "/gpu_watchdog_loop.sh"]
+    depends_on:
+      - vllm
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
 
   dcgm-exporter:
     image: nvcr.io/nvidia/k8s/dcgm-exporter:latest

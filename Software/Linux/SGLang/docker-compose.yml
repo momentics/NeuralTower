@@ -1,4 +1,22 @@
 services:
+  gpu-check:
+    image: nvidia/cuda:12.8.0-base-ubuntu24.04
+    container_name: neural_tower_gpu_check
+    runtime: nvidia
+    privileged: true
+    volumes:
+      - /var/log:/var/log
+      - ../scripts/gpu_watchdog.sh:/gpu_watchdog.sh:ro
+    command: ["/bin/bash", "/gpu_watchdog.sh"]
+    restart: "no"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
+
   sglang-server:
     image: lmsysorg/sglang:latest
     container_name: sglang_core_server
@@ -18,12 +36,16 @@ services:
       - ${MODELS_PATH:-/opt/llm/models}:/models:ro
       # Прямое монтирование Intel Optane U.2 для HiCache
       - ${KV_CACHE_PATH:-/mnt/optane_u2/sglang_kv_cache}:/mnt/optane_u2/sglang_kv_cache:rw
+      - /var/log:/var/log
+    depends_on:
+      gpu-check:
+        condition: service_completed_successfully
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: all
+              count: 4
               capabilities: [gpu]
     command: >
       python3 -m sglang.launch_server
@@ -55,6 +77,28 @@ services:
           "schedule_policy": "on_demand"
         }
       }'
+
+  gpu-watchdog:
+    image: nvidia/cuda:12.8.0-base-ubuntu24.04
+    container_name: neural_tower_gpu_watchdog
+    runtime: nvidia
+    privileged: true
+    volumes:
+      - /var/log:/var/log
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp
+      - ../scripts/gpu_watchdog_loop.sh:/gpu_watchdog_loop.sh:ro
+    command: ["/bin/bash", "/gpu_watchdog_loop.sh"]
+    depends_on:
+      - sglang-server
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
 
   prometheus:
     image: prom/prometheus:latest
