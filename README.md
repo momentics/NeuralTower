@@ -90,6 +90,10 @@ NeuralTower/
 └── ...                    # другие директории могут присутствовать
 ```
 
+## Связанные проекты
+
+- [NeuralTower-Agent](https://github.com/momentics/NeuralTower-Agent) — интеллектуальный ассистент разработки для VS Code, подключенный к серверу SGLang/vLLM на узле NeuralTower
+
 ## Связь
 
 Группа в Telegram: [@NeuralTower](https://t.me/NeuralTower)
