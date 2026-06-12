@@ -112,7 +112,7 @@ p2pBandwidthLatencyTest.exe
 
 ### Диагноз
 
-На Windows NVLink физически активен (`nvidia-smi nvlink -s` показывает скорость линков, P2P поддерживается), но **GPM-метрики NVLink трафика (`nvlrx`/`nvltx`) стабильно равны 0** при работающем распределённом `llama-server`.
+На Windows NVLink физически активен (`nvidia-smi nvlink -s` показывает скорость соединений, P2P поддерживается), но **GPM-метрики NVLink трафика (`nvlrx`/`nvltx`) стабильно равны 0** при работающем распределённом `llama-server`.
 
 **Причина:** На Windows отсутствует NCCL (NVIDIA Collective Communications Library). Библиотека `llama.cpp` использует базовые CUDA P2P-механизмы для обмена между GPU, но в Windows-драйвере CUDA P2P маршрутизируется через **PCIe**, а не через NVLink. Это архитектурное ограничение платформы, а не ошибка конфигурации.
 

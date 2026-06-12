@@ -22,7 +22,7 @@
 - Среда: LM Studio 0.4.  
 - BIOS: включена опция **4G Decoding**.
 
-### Тестирующие промпты
+### Тестируемые запросы
 
 - [PromptGeneral01.txt](./PromptGeneral01.txt) — базовые запросы.  
 - [PromptComplex01.txt](./PromptComplex01.txt) — сложные запросы.  
