@@ -2,7 +2,7 @@
 
 ## Создание Performance-ядра
 
-Этот набор флагов применяется поверх стандартных исходных кодов ядра sys-kernel/gentoo-sources или sys-kernel/vanilla-sources. Он полностью вырезает защитные барьеры и накладные расходы ради достижения максимального темпа прокачки терабайтного KV-кэша моделей.
+Набор флагов применяется поверх sys-kernel/gentoo-sources или sys-kernel/vanilla-sources. Убирает защитные барьеры и накладные расходы для максимальной скорости обработки KV-кэша.
 
 ```bash
 cd /usr/src/linux-performance
@@ -14,7 +14,7 @@ cp arch/x86/boot/bzImage /boot/vmlinuz-performance
 
 ## Создание Hardened-ядра
 
-Этот набор флагов применяется поверх исходных кодов ядра защищенного профиля sys-kernel/hardened-sources. Он разворачивает полный комплекс механизмов противодействия эксплуатации уязвимостей (KASLR, контроль копирования данных, защита стека и lockdown-режим).
+Набор флагов применяется поверх sys-kernel/hardened-sources. Включает механизмы защиты от эксплуатации уязвимостей: KASLR, контроль копирования данных, защита стека, lockdown-режим.
 
 ```bash
 cd /usr/src/linux-hardened
@@ -26,32 +26,32 @@ cp arch/x86/boot/bzImage /boot/vmlinuz-hardened
 
 ## Конфигурирование GRUB
 
-GRUB_DEFAULT=saved указывает загрузчику при старте не запускать жестко первый пункт по порядку, а смотреть в специальный текстовый файл среды (grubenv), где хранится имя последнего запущенного профиля.
-GRUB_SAVEDEFAULT=true заставляет GRUB автоматически перезаписывать этот файл каждый раз, когда физически выбираете в меню другую строчку и нажимаете Enter.
+`GRUB_DEFAULT=saved` указывает загрузчику использовать последний выбранный профиль из файла `grubenv`, а не жёстко первый пункт.
+`GRUB_SAVEDEFAULT=true` заставляет GRUB автоматически сохранять выбранный пункт в `grubenv`.
 
 ```ini
-# Заставляем GRUB использовать сохраненное значение по умолчанию
+# Использование последнего выбранного профиля
 GRUB_DEFAULT=saved
 
-# Включаем механизм записи последнего успешно выбранного пункта в память
+# Автоматическое сохранение выбранного пункта
 GRUB_SAVEDEFAULT=true
 ```
 
 ```ini
 # /boot/grub/grub.cfg
 
-menuentry "NeuralTower - PERFORMANCE PROFILE (Maximum Speed)" {
+menuentry "NeuralTower - PERFORMANCE (Максимальная скорость)" {
     linux /boot/vmlinuz-performance root=/dev/sda3 console=ttyS0,115200n8 mitigations=off
 }
 
-menuentry "NeuralTower - HARDENED PROFILE (Public Internet Secure)" {
+menuentry "NeuralTower - HARDENED (Защищённый профиль)" {
     linux /boot/vmlinuz-hardened root=/dev/sda3 console=ttyS0,115200n8 mitigations=auto
 }
 ```
 
 ## Пересборка конфигурации GRUB
 
-После копирования бинарников ядер запустите утилиту автоматической сборки конфигурации загрузчика:
+После копирования ядер обновите конфигурацию загрузчика:
 
 ```bash
 grub-mkconfig -o /boot/grub/grub.cfg
