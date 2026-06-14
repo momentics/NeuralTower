@@ -26,16 +26,16 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Жесткая изоляция тяжелого All-Reduce трафика внутри NVLink-мезонинов
+      # NCCL: изоляция трафика All-Reduce внутри NVLink-мезонинов
       - NCCL_P2P_LEVEL=NVL
       - NCCL_IB_DISABLE=1
       - NCCL_NET_PLUGIN=none
       - CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0,1,2,3}
     volumes:
-      # Путь к локальному хранилищу моделей
+      # Локальное хранилище моделей
       - ${MODELS_PATH:-/opt/llm/models}:/models:ro
-      # Прямое монтирование Intel Optane U.2 для HiCache
-      - ${KV_CACHE_PATH:-/mnt/optane_u2/sglang_kv_cache}:/mnt/optane_u2/sglang_kv_cache:rw
+      # NVMe Intel DC P4510 для HiCache L3 (файловый бэкенд)
+      - ${KV_CACHE_PATH:-/nvme/sglang_kv_cache}:/nvme/sglang_kv_cache:rw
       - /var/log:/var/log
     depends_on:
       gpu-check:
@@ -49,34 +49,28 @@ services:
               capabilities: [gpu]
     command: >
       python3 -m sglang.launch_server
+      --model ${MODEL_PATH:-/models/Qwen3.6-27B-Instruct}
       --host 0.0.0.0
       --port 8000
       --tp-size ${TP_SIZE:-2}
       --pp-size ${PP_SIZE:-2}
       --dtype float16
       --kv-cache-dtype int8
+      --attention-backend triton
       --context-length 1000000
       --chunked-prefill-size 4096
       --enable-dynamic-chunking
       --enable-mixed-chunk
-      --enable-hicache
-      --hicache-storage-backend local_disk
-      --hicache-storage-path /mnt/optane_u2/sglang_kv_cache
-      --hicache-cpu-memory-limit-gb ${HICACHE_CPU_MEMORY_LIMIT_GB:-48}
-      --speculative-algorithm eagle
-      --speculative-draft /models/EAGLE-Qwen3.6-27B-Instruct
-      --speculative-num-tokens 3
-      --multi-model-manifest '{
-        "qwen-fast": {
-          "model_path": "/models/Qwen2.5-Coder-32B-Instruct",
-          "mem_fraction_static": ${MEM_FRACTION_FAST:-0.50}
-        },
-        "qwen-heavy": {
-          "model_path": "/models/Qwen2.5-72B-Instruct-AWQ",
-          "mem_fraction_static": ${MEM_FRACTION_HEAVY:-0.40},
-          "schedule_policy": "on_demand"
-        }
-      }'
+      --mem-fraction-static ${MEM_FRACTION_STATIC:-0.50}
+      --cuda-graph-max-bs ${CUDA_GRAPH_MAX_BS:-4}
+      --enable-hierarchical-cache
+      --hicache-size ${HICACHE_SIZE_GB:-30}
+      --hicache-storage-backend file
+      --speculative-algorithm EAGLE
+      --speculative-draft-model-path ${EAGLE_DRAFT_MODEL_PATH:-/models/EAGLE-Qwen3.6-27B-Instruct}
+      --speculative-num-steps 3
+      --speculative-eagle-topk 1
+      --speculative-num-draft-tokens 4
 
   gpu-watchdog:
     image: nvidia/cuda:12.8.0-base-ubuntu24.04

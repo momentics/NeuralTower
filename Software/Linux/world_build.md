@@ -72,15 +72,22 @@ export MAX_JOBS=4
 
 ### NVMe swap
 
-SSD Intel DC P4510 устанавливается в PCIe x4 слот процессора через адаптер PCIe x4 to M.2 NVMe. Настройка swap:
+SSD Intel DC P4510 устанавливается в PCIe x4 слот процессора через адаптер PCIe x4 to M.2 NVMe.
+Swap используется как OOM-страховка, а не как рабочее хранилище. Размер 50 ГБ достаточен для пиковых сценариев загрузки моделей.
 
 ```bash
-# Форматирование NVMe для swap
-mkswap /dev/nvme0n1
-swapon /dev/nvme0n1
+# Монтирование NVMe
+mount /dev/nvme0n1 /nvme
+
+# Создание swap-файла 50 ГБ
+fallocate -l 50G /nvme/swapfile
+chmod 600 /nvme/swapfile
+mkswap /nvme/swapfile
+swapon /nvme/swapfile
 
 # Постоянная запись в /etc/fstab
-echo '/dev/nvme0n1 none swap sw 0 0' >> /etc/fstab
+echo '/dev/nvme0n1 /nvme ext4 defaults 0 2' >> /etc/fstab
+echo '/nvme/swapfile none swap sw 0 0' >> /etc/fstab
 ```
 
 ### Hugepages
