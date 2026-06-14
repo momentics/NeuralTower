@@ -10,7 +10,7 @@
 
 | Параметр | Путь в BIOS | Значение |
 | --- | --- | --- |
-| Above 4G Decoding | Boot → Boot Configuration → Above 4G Decoding | [Enabled] |
+| Above 4G Decoding | Advanced → PCI Subsystem Settings → Above 4G Decoding | [Enabled] |
 
 ### Скорость слотов PCIe
 

@@ -31,7 +31,7 @@
 ### Результаты
 
 - Средняя скорость инференса: **32,69 TPS**.  
-- Выходы модели: [OutputGeneral01.png](./OutputGeneral01.png), [OutputComplex01.png](./OutputComplex01.png), [OutputExtended01.txt](./OutputExtended01.txt).
+- Выходы модели: [OutputGeneral01.png](./OutputGeneral01.png), [OutputComplex01.png](./OutputComplex01.png), [OutputComplex01.txt](./OutputComplex01.txt), [OutputExtended01.txt](./OutputExtended01.txt).
 
 ## Диагностика и тестирование карт NVIDIA Tesla V100 SXM2 32GB (4x GPU)
 

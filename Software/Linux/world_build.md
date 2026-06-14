@@ -66,6 +66,40 @@ export MAX_JOBS=4
 
 ---
 
+## 2.2. Настройка swap и hugepages
+
+Для работы vLLM с большими моделями требуется NVMe swap и hugepages.
+
+### NVMe swap
+
+SSD Intel DC P4510 устанавливается в PCIe x4 слот процессора через адаптер PCIe x4 to M.2 NVMe. Настройка swap:
+
+```bash
+# Форматирование NVMe для swap
+mkswap /dev/nvme0n1
+swapon /dev/nvme0n1
+
+# Постоянная запись в /etc/fstab
+echo '/dev/nvme0n1 none swap sw 0 0' >> /etc/fstab
+```
+
+### Hugepages
+
+Резервирование hugepages снижает количество промахов TLB при обращении к KV-кэшу:
+
+```bash
+# Резервирование 48 ГБ (24576 страниц по 2 МБ)
+echo 'vm.nr_hugepages = 24576' >> /etc/sysctl.d/99-hugepages.conf
+sysctl -p /etc/sysctl.d/99-hugepages.conf
+```
+
+Проверка:
+```bash
+cat /proc/meminfo | grep HugePages
+```
+
+---
+
 ## 3. Инициализация окружения Python
 
 ```bash

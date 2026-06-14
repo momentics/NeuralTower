@@ -59,7 +59,7 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet pci=realloc,assign-busses pci=hp_pcie_bus_max"
 До длительных запусков моделей включите мониторинг из [scripts](./scripts):
 
 ```bash
-cd Software/Linux/scripts
+cd "$(git rev-parse --show-toplevel)/Software/Linux/scripts"
 docker-compose up -d
 ./monitor.sh
 ```
