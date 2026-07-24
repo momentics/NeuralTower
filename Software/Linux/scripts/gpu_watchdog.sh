@@ -11,7 +11,7 @@ MAX_RETRIES=5
 RETRY_DELAY=30
 
 log_msg() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') [GPU-STARTUP-HECK] $1" | tee -a "$LOG_FILE"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [GPU-STARTUP-CHECK] $1" | tee -a "$LOG_FILE"
 }
 
 check_gpus() {

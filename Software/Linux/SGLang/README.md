@@ -47,6 +47,10 @@
 | `MEM_FRACTION_STATIC` | `0.50` | Доля памяти для весов и KV-кэша |
 | `CUDA_GRAPH_MAX_BS` | `4` | Максимальный размер пакета CUDA-графа |
 | `HICACHE_SIZE_GB` | `30` | Объём HiCache L2 в оперативной памяти на ранг (итого = значение × число рангов) |
+| `SPECULATIVE_ALGO` | `EAGLE` | Алгоритм: `EAGLE`, `MTP` или `NGRAM` |
+| `SPECULATIVE_NUM_STEPS` | `3` | Количество шагов спекуляции |
+| `SPECULATIVE_EAGLE_TOPK` | `1` | Top-K для EAGLE |
+| `SPECULATIVE_NUM_DRAFT_TOKENS` | `4` | Количество токенов-черновиков |
 
 ## Ограничения V100 (sm_70)
 

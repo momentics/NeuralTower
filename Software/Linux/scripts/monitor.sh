@@ -26,7 +26,7 @@ while true; do
     
     # Рекомендация по безопасности
     GPU_MAX_TEMP=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits | sort -nr | head -1)
-    if [ "$GPU_MAX_TEMP" -gt 65 ]; then
+    if [ "$GPU_MAX_TEMP" -gt 75 ]; then
         echo -e "\033[0;31mWARNING: High Temperature Detected! Check V-Core Pressure!\033[0m"
     fi
 

@@ -20,7 +20,7 @@ services:
               capabilities: [gpu]
 
   vllm:
-    image: vllm/vllm-openai:latest
+    image: 1catai/1cat-vllm:latest
     container_name: neural_tower_vllm
     runtime: nvidia
     # Блокировка памяти для предотвращения ухода в системный swap
@@ -47,9 +47,7 @@ services:
         condition: service_completed_successfully
     command: >
       --model <path_to_model>
-      # Для демонстрации Full NVLink топологии,
-      # использовать надо --tensor-parallel-size 4
-      # вместо tensor-parallel-size и pipeline-parallel-size
+      # TP=2 + PP=2: AllReduce внутри NVLink-пар (GPU 0↔1, GPU 2↔3), PP через PCIe
       --tensor-parallel-size 2
       --pipeline-parallel-size 2
       --gpu-memory-utilization 0.95

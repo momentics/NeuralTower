@@ -22,7 +22,7 @@ CPU_FLAGS_X86="aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt rdrand sse sse2 s
 USE="cuda nccl cudnn tensorrt mpi openmp opencl pcie-p2p -X -wayland -gui -dist-kernel"
 PYTHON_TARGETS="python3_12"
 CXXFLAGS="${CFLAGS}"
-MAKEOPTS="-j16"
+MAKEOPTS="-j12"
 
 USE="hardened pic pie nsm tcmalloc native-symlinks cuda"
 VIDEO_CARDS="nvidia"
@@ -51,7 +51,7 @@ export TORCH_CUDA_ARCH_LIST="7.0"
 export VLLM_CONCURRENT_ARCHES="7.0"
 export PYTORCH_NVCC_FLAGS="-arch=sm_70"
 
-# Ограничение параллелизма сборки для стабильности
+# Ограничение параллелизма сборки CUDA-расширений для стабильности (отдельно от MAKEOPTS Portage)
 export MAX_JOBS=4
 ```
 
@@ -73,14 +73,14 @@ export MAX_JOBS=4
 ### NVMe swap
 
 SSD Intel DC P4510 устанавливается в PCIe x4 слот процессора через адаптер PCIe x4 to M.2 NVMe.
-Swap используется как OOM-страховка, а не как рабочее хранилище. Размер 50 ГБ достаточен для пиковых сценариев загрузки моделей.
+Swap используется как OOM-страховка, а не как рабочее хранилище. Размер 500 ГБ обеспечивает запас для пиковых сценариев загрузки моделей и vLLM swap на длинных контекстах.
 
 ```bash
 # Монтирование NVMe
 mount /dev/nvme0n1 /nvme
 
-# Создание swap-файла 50 ГБ
-fallocate -l 50G /nvme/swapfile
+# Создание swap-файла 500 ГБ (Intel DC P4510 1 ТБ NVMe; остаток — под HiCache SGLang и данные моделей)
+fallocate -l 500G /nvme/swapfile
 chmod 600 /nvme/swapfile
 mkswap /nvme/swapfile
 swapon /nvme/swapfile

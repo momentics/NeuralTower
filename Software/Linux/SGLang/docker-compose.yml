@@ -66,11 +66,11 @@ services:
       --enable-hierarchical-cache
       --hicache-size ${HICACHE_SIZE_GB:-30}
       --hicache-storage-backend file
-      --speculative-algorithm EAGLE
+      --speculative-algorithm ${SPECULATIVE_ALGO:-EAGLE}
       --speculative-draft-model-path ${EAGLE_DRAFT_MODEL_PATH:-/models/EAGLE-Qwen3.6-27B-Instruct}
-      --speculative-num-steps 3
-      --speculative-eagle-topk 1
-      --speculative-num-draft-tokens 4
+      --speculative-num-steps ${SPECULATIVE_NUM_STEPS:-3}
+      --speculative-eagle-topk ${SPECULATIVE_EAGLE_TOPK:-1}
+      --speculative-num-draft-tokens ${SPECULATIVE_NUM_DRAFT_TOKENS:-4}
 
   gpu-watchdog:
     image: nvidia/cuda:12.8.0-base-ubuntu24.04
