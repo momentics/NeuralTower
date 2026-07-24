@@ -53,6 +53,8 @@ python -m vllm.entrypoints.openai.api_server \
   --attention-backend FLASH_ATTN_V100 \
   --tensor-parallel-size 2 \
   --pipeline-parallel-size 2 \
+  --dtype float16 \
+  --kv-cache-dtype int8 \
   --gpu-memory-utilization 0.88 \
   --max-model-len 262144 \
   --max-num-seqs 1 \
@@ -85,6 +87,7 @@ python -m vllm.entrypoints.openai.api_server \
   --tensor-parallel-size 2 \
   --pipeline-parallel-size 2 \
   --dtype float16 \
+  --kv-cache-dtype int8 \
   --gpu-memory-utilization 0.95 \
   --swap-space 64 \
   --max-model-len 32768
