@@ -1,101 +1,33 @@
 # NeuralTower
 
-<img src="./Docs/Images/logo.png" width="100" align="left" alt="Логотип проекта NeuralTower"> NeuralTower - открытый инженерный проект настольной рабочей станции на четырех NVIDIA Tesla V100 SXM2 32 GB. Цель проекта - собрать локальный узел с 128 GB HBM2 для инференса и экспериментов с большими моделями без постоянной зависимости от облака.
+<img src="./Documentation/Images/logo.png" width="100" align="left" alt="Логотип проекта NeuralTower"> Оригинальный инженерный проект настольной рабочей станции на четырёх NVIDIA Tesla V100 SXM2 32 GB (128 ГБ HBM2) для инференса больших моделей без зависимости от облака.
 <br clear="left" />
 
-Проект прошел стадию Proof of Concept: стенд из двух ускорителей V100 SXM2 32 ГБ был собран, протестирован и показал среднюю скорость 32,69 токена в секунду при инференсе модели Qwen3.6-27B. Детали PoC зафиксированы в [Diagnosis/V100-SXM2-32G/PoC.md](./Diagnosis/V100-SXM2-32G/PoC.md). Полноценная сборка на четырех GPU с жидкостным охлаждением и двумя блоками питания находится в стадии подготовки. В репозитории отдельно лежат расчеты, механика, электрическая часть, подготовка железа, программная среда и статьи о проекте. Если обзорный текст расходится с инженерным документом, для сборки нужно использовать инженерный документ.
+## Документация
 
-## Быстрая навигация
+Вся документация проекта — в папке [Documentation/](./Documentation/). Начните с обзора:
+
+- **[Documentation/00-overview.md](./Documentation/00-overview.md)** — обзор проекта, архитектура, статус, навигация
+- **[Documentation/01-bom.md](./Documentation/01-bom.md)** — спецификация компонентов и материалов
+
+### Разделы
 
 | Раздел | Назначение |
 | --- | --- |
-| [Docs/project_status.md](./Docs/project_status.md) | Текущий статус узлов, неподтвержденные гипотезы и план первичной проверки |
-| [Docs/BOM/bom_list.md](./Docs/BOM/bom_list.md) | Перечень компонентов, материалов и закупочных позиций |
-| [Docs/Calculations/air_dynamics.md](./Docs/Calculations/air_dynamics.md) | Расчет воздушной части V-CORE |
-| [CAD/Frame/frame_assembly.md](./CAD/Frame/frame_assembly.md) | Нарезка профиля, рельсы и силовые поперечины каркаса |
-| [CAD/Mounts/mounting_hardware.md](./CAD/Mounts/mounting_hardware.md) | Канонический порядок сборки нижнего отсека |
-| [CAD/Deck/deck_layout.md](./CAD/Deck/deck_layout.md) | Геометрия палубы, сопел и технологических проходов |
-| [CAD/PSU/psu_mounting_regulation.md](./CAD/PSU/psu_mounting_regulation.md) | Полный регламент PSU-узла: кронштейны, изоляция, панели, кабели, заземление |
-| [Electrical/Pinouts/slimsas_mapping.md](./Electrical/Pinouts/slimsas_mapping.md) | Топология SlimSAS, слоты PCIe и порядок GPU |
-| [Hardware/BIOS/bios_settings.md](./Hardware/BIOS/bios_settings.md) | Настройки BIOS для V100, PLX и PCIe |
-| [Software/Linux/system_setup.md](./Software/Linux/system_setup.md) | Порядок подготовки ОС и первого запуска |
-| [Diagnosis/V100-SXM2-32G](./Diagnosis/V100-SXM2-32G/) | Контейнер диагностики четырех V100 SXM2 |
-
-## Архитектура
-
-Система строится вокруг четырех Tesla V100 SXM2, установленных на двух SXM2 carrier board. Внутри каждого мезонина пара GPU связана NVLink 2.0, а межмезонинный обмен идет через PCIe 3.0 x16, SlimSAS SFF-8654 8i и PLX-коммутаторы материнской платы ASUS X99-E WS.
-
-**Вычислительный узел:**
-- Процессор: Intel Xeon E5-2687W v4 (12 ядер, 24 потока, LGA 2011-3, TDP 160W)
-- ОЗУ: 8x DDR4 32GB 2400 ECC REG RDimm (суммарно 256 ГБ)
-- Материнская плата: ASUS X99-E WS
-
-**Графика:**
-- 4x NVIDIA Tesla V100 SXM2 32 ГБ (суммарно 128 ГБ HBM2)
-
-**Питание:**
-- 2× Chieftec Polaris Pro 1300W (2600 Вт суммарно)
-- Мезонины питаются только GPU 8-pin и CPU 8-pin (без ATX 24-pin)
-
-Основной инженерный компромисс проекта: V100 уже не современная архитектура, но дает большой объем HBM2 на вторичном рынке. Для программного стека это означает обязательную работу с ограничениями Volta `sm_70`: CUDA 12.8, FP16 как базовый тип данных и отдельная стратегия для vLLM.
-
-## Охлаждение V-CORE
-
-V-CORE - рабочее название схемы охлаждения, где жидкостный контур снимает основную тепловую нагрузку с CPU и GPU, а нижний отсек корпуса работает как камера избыточного давления. Воздух проходит через радиаторы СЖО, попадает в герметичный КВД и выходит через калиброванные сопла палубы к VRM, обратным сторонам плат и зонам, не закрытым водоблоками. Мезонины установлены SlimSAS-разъёмами вниз, текстолитом к материнской плате. Два блока питания Chieftec Polaris Pro 1300W находятся в изолированных боковых отсеках и не используют воздух КВД.
-
-Основные документы по этой теме:
-
-- механика палубы: [CAD/Deck/deck_layout.md](./CAD/Deck/deck_layout.md);
-- аэродинамический расчет: [Docs/Calculations/air_dynamics.md](./Docs/Calculations/air_dynamics.md);
-- гидравлика СЖО: [Docs/Calculations/coolant_hydraulics.md](./Docs/Calculations/coolant_hydraulics.md);
-- объем теплоносителя: [Docs/Calculations/coolant_volume.md](./Docs/Calculations/coolant_volume.md).
-
-## Программный стек
-
-Основной путь развертывания: Gentoo Linux, CUDA 12.8, NVIDIA driver 580+, Python 3.12 и 1Cat-vLLM для восстановления рабочей поддержки V100. Альтернативный путь - официальный vLLM ветки `0.18.x` с Triton-бэкендом, если форк 1Cat-vLLM не подходит.
-
-Стартовые документы:
-
-- [Software/Linux/system_setup.md](./Software/Linux/system_setup.md) - порядок подготовки системы и ссылки на подробные инструкции;
-- [Software/Linux/gentoo_optimization.md](./Software/Linux/gentoo_optimization.md) - параметры Gentoo и ядра;
-- [Software/Linux/world_build.md](./Software/Linux/world_build.md) - воспроизводимая сборка окружения;
-- [Software/Linux/vllm_optimization.md](./Software/Linux/vllm_optimization.md) - запуск vLLM, TP/PP, NVMe swap и NCCL.
-
-## Безопасность
-
-В проекте используются высокие токи, два блока питания, жидкостное охлаждение и дорогое серверное оборудование. До подачи питания обязательны проверка распиновок, прозвонка силовых кабелей, контроль общей земли между БП и рамой, наружный доступ к выключателям Chieftec Polaris Pro 1300W, тест герметичности СЖО и проверка работы помп.
-
-Связанные документы:
-
-- [Electrical/Pinouts/adapter_spec.md](./Electrical/Pinouts/adapter_spec.md);
-- [Electrical/Wiring/power_distribution.md](./Electrical/Wiring/power_distribution.md);
-- [Electrical/Wiring/grounding_guide.md](./Electrical/Wiring/grounding_guide.md);
-- [Docs/project_status.md](./Docs/project_status.md).
-
-## Структура репозитория
-
-```text
-NeuralTower/
-├── Articles/              # публикации и черновики статей
-├── CAD/                   # механическая компоновка и сборка
-├── Diagnosis/             # аппаратные тесты GPU
-├── Docs/
-│   ├── BOM/               # перечень компонентов
-│   ├── Calculations/      # расчетные записки
-│   └── Images/            # логотип, схемы и будущие фотографии
-├── Electrical/            # питание, земля, распиновки
-├── Hardware/              # GPU, BIOS, аппаратная подготовка
-├── Manuals/               # внешние мануалы и справочные материалы
-├── Software/              # ОС, ML-стек, мониторинг
-└── ...                    # другие директории могут присутствовать
-```
+| [Documentation/02-mechanical/](./Documentation/02-mechanical/) | Механика, сборка, панели, PSU-узел, сопла |
+| [Documentation/03-calculations/](./Documentation/03-calculations/) | Расчётные записки: аэродинамика, гидравлика, габариты |
+| [Documentation/04-electrical/](./Documentation/04-electrical/) | Питание, заземление, топология SlimSAS |
+| [Documentation/05-hardware/](./Documentation/05-hardware/) | BIOS, подготовка GPU |
+| [Documentation/06-software/](./Documentation/06-software/) | Gentoo, vLLM, SGLang, мониторинг |
+| [Documentation/07-diagnostics/](./Documentation/07-diagnostics/) | Диагностика V100, PoC, бенчмарки |
+| [Documentation/08-external/](./Documentation/08-external/) | Внешние спецификации: мезонин, Add2PSU, водоблоки, БП |
 
 ## Связанные проекты
 
-- [NeuralTower-Agent](https://github.com/momentics/NeuralTower-Agent) — интеллектуальный ассистент разработки для VS Code, подключенный к серверу SGLang/vLLM на узле NeuralTower
+- [NeuralTower-Agent](https://github.com/momentics/NeuralTower-Agent) — интеллектуальный ассистент разработки для VS Code
 
 ## Связь
 
 Группа в Telegram: [@NeuralTower](https://t.me/NeuralTower)
 
-<p align="left"><img src="./Docs/Images/Telegram.png" width="150" height="150" alt="Группа Telegram проекта NeuralTower"></p>
+<p align="left"><img src="./Documentation/Images/Telegram.png" width="150" height="150" alt="Группа Telegram проекта NeuralTower"></p>
