@@ -164,8 +164,8 @@ $$\dot{m} = \rho \cdot V = 1000 \times \frac{5.2 \times 10^{-3}}{60} = \mathbf{0
 **Пиковая нагрузка (1310 Вт):**
 $$\Delta T_{\text{пик}} = \frac{P_{\text{СЖО}}}{\dot{m} \cdot c_p} = \frac{1310}{0.0867 \times 3400} \approx \mathbf{4.45^\circ\text{C}}$$
 
-**Целевой инференс (1075 Вт):**
-$$\Delta T_{\text{инф}} = \frac{1075}{0.0867 \times 3400} \approx \mathbf{3.66^\circ\text{C}}$$
+**Целевой инференс (1074 Вт):**
+$$\Delta T_{\text{инф}} = \frac{1074}{0.0867 \times 3400} \approx \mathbf{3.66^\circ\text{C}}$$
 
 ### 4.3. Температурный профиль контура
 
