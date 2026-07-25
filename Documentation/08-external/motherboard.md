@@ -33,8 +33,8 @@
 | PCIEX16_2 | PCIe 3.0 x16 | x16 (от CPU) |
 | PCIEX16_3 | PCIe 3.0 x16 | x16 (от PLX1) |
 | PCIEX16_4 | PCIe 3.0 x16 | x16 (от PLX1) |
-| PCIEX16_5 | PCIe 3.0 x16 | x16 (от CPU) |
-| PCIEX16_6 | PCIe 3.0 x16 | x16 (от CPU) |
+| PCIEX16_5 | PCIe 3.0 x16 | x16 (от PLX2) |
+| PCIEX16_6 | PCIe 3.0 x16 | x16 (от PLX2) |
 | PCIEX16_7 | PCIe 3.0 x16 | x16 (от PLX2) |
 
 ### 4.1. PLX PEX 8747
