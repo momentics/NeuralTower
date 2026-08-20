@@ -1,14 +1,14 @@
-# Hardware Preparation
+# Подготовка аппаратной части
 
-This section covers the hardware preparation for the NeuralTower system, including GPU preparation and BIOS configuration for the four Tesla V100 SXM2 accelerators on the LGA 2011-3 desktop platform.
+Раздел описывает подготовку аппаратной части системы NeuralTower: подготовку GPU и настройку BIOS для четырёх ускорителей Tesla V100 SXM2 на настольной платформе LGA 2011-3.
 
-## GPU Preparation Summary
+## Кратко: подготовка GPU
 
-The Tesla V100 SXM2 modules require removal of factory radiators, cleaning of GPU and HBM2 memory dies, and installation of Speedier XF-001-CO water blocks (140 x 80 x 30 mm, 300W TDP). Proper thermal interface material selection and uniform clamping pressure are critical for long-term reliability.
+Модули Tesla V100 SXM2 требуют демонтажа штатных радиаторов, очистки кристаллов GPU и памяти HBM2 и установки водоблоков Speedier XF-001-CO (140 x 80 x 30 мм, 300W TDP). Для долгосрочной надёжности критичны правильный выбор термоинтерфейса и равномерное усилие прижима.
 
-## BIOS Settings Summary
+## Кратко: настройки BIOS
 
-| Parameter | Path in BIOS | Value |
+| Параметр | Путь в BIOS | Значение |
 | --- | --- | --- |
 | Above 4G Decoding | Advanced → PCI Subsystem Settings → Above 4G Decoding | Enabled |
 | PCIEX16_1-7 Link Speed | Advanced → System Agent Configuration → NB PCI-E Configuration | Gen3 |
@@ -19,7 +19,7 @@ The Tesla V100 SXM2 modules require removal of factory radiators, cleaning of GP
 | Launch CSM | Boot → Boot Configuration → CSM → Launch CSM | Disabled |
 | OS Type | Boot → Boot Configuration → Secure Boot → OS Type | Other OS |
 
-## Detailed Guides
+## Подробные руководства
 
-- [GPU Preparation](./gpu-preparation.md) — Disassembly, water block installation, and mezzanine integration
-- [BIOS Settings](./bios-settings.md) — Full BIOS configuration and system logic optimization
+- [Подготовка GPU](./gpu-preparation.md) — демонтаж, установка водоблоков, интеграция в мезонин
+- [Настройки BIOS](./bios-settings.md) — полная конфигурация BIOS и оптимизация системной логики

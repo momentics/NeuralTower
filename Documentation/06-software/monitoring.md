@@ -7,7 +7,7 @@
 ### 1.1. Загрузка шаблона
 
 Официальный файл конфигурации необходимо загрузить с портала Grafana Dashboards:
-* **Источник:** [NVIDIA DCGM Exporter Dashboard (ID: 12239)](https://grafana.com)
+* **Источник:** [NVIDIA DCGM Exporter Dashboard (ID: 12239)](https://grafana.com/grafana/dashboards/12239)
 * **Метод:** Нажмите кнопку «Download JSON» и сохраните файл под именем `grafana_dashboard.json` в текущую директорию со скриптами.
 
 ### 1.2. Ручные правки конфигурации
